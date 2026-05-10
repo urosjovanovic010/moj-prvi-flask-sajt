@@ -1,2 +1,17 @@
-<h1>Dobrodošli na moj prvi Python sajt!</h1>
-<p>Ovo je prva HTML stranica.</p>
+<!DOCTYPE html>
+<html lang="sr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Moj Prvi sajt</title>
+    <!-- Ovo je taj magicni "prozor" u kom pozivamo fajul iz static foldera-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+</head>
+
+<body>
+    <h1>Dobrodošli na moj prvi Python sajt!</h1>
+    <p>Ovo je prva HTML stranica.</p>
+    <p>Zdravo {{moje_ime}}</p>
+</body>
+
+</html>

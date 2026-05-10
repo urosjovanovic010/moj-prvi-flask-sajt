@@ -4,7 +4,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('pocetna.html')
+    moje_ime="Uros"
+    return render_template('pocetna.html',moje_ime=moje_ime)
 
 @app.route('/o-nama')
 def onama():
