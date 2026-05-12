@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="sr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TryMyBike - Flask Verzija</title>
+    <!-- Ubacujemo Tailwind CSS (umesto našeg običnog style.css) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <!-- HEADER (Gornja Kifla) -->
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">TryMyBike</h1>
+            <nav>
+                <a href="{{ url_for('home') }}" class="hover:text-blue-200 mr-4">Početna</a>
+                <a href="{{ url_for('onama') }}" class="hover:text-blue-200">O nama</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- SREDINA (Mesto za punjenje) -->
+    <main class="container mx-auto flex-grow p-4 mt-4">
+
+        {% block content %}
+        <!-- Ovde će se automatski ubacivati sadržaj drugih stranica -->
+        {% endblock %}
+
+    </main>
+
+    <!-- FOOTER (Donja Kifla) -->
+    <footer class="bg-gray-800 text-white text-center p-4 mt-auto">
+        <p>&copy; 2026 TryMyBike. Sva prava zadržana.</p>
+    </footer>
+
+</body>
+
+</html>

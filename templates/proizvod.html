@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-10">
+
+    <!-- Prikazujemo naziv proizvoda -->
+    <h2 class="text-4xl font-extrabold text-gray-800 mb-4">{{ proizvod.naziv }}</h2>
+
+    <div class="border-t border-b border-gray-200 py-6 my-6">
+        <p class="text-gray-600 text-lg mb-2">Detalji o ovom vrhunskom delu za bicikl.</p>
+
+        <!-- Prikazujemo ID i Cenu -->
+        <p class="text-gray-500">Šifra proizvoda (ID): <span class="font-mono text-gray-800">{{ proizvod.id }}</span>
+        </p>
+        <p class="text-2xl font-bold text-green-600 mt-4">Cena: {{ proizvod.cena }} RSD</p>
+    </div>
+
+    <!-- Dugme za povratak nazad -->
+    <a href="{{ url_for('home') }}"
+        class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+        &larr; Nazad na sve proizvode
+    </a>
+
+</div>
+{% endblock %}
