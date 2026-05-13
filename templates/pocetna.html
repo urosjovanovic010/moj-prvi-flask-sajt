@@ -2,16 +2,36 @@
 
 {% block content %}
 
-<div class="bg-white p-8 rounded-lg shadow-md text-center">
-    <h2 class="text-3xl font-bold mb-4 text-gray-800">Dobrodošli na Flask TryMyBike!</h2>
-    <img src="{{ url_for('static', filename='images/hero.png') }}" alt="Hero slika">
+<!-- GLAVNI KONTEJNER (Sendvič) -->
+<!-- relative = omogućava slojevima unutra da se ređaju jedan preko drugog -->
+<!-- h-96 = fiksna visina za hero sekciju, overflow-hidden = seče sliku ako je prevelika -->
+<div class="relative h-96 rounded-lg overflow-hidden shadow-lg mb-8">
 
-    <p class="text-lg text-gray-600 mb-6">Ovo je naša nova početna stranica koja koristi Tailwind CSS.</p>
+    <!-- 1. SLOJ: SLIKA -->
+    <!-- absolute inset-0 = rastegni se preko celog kontejnera -->
+    <!-- object-cover = iseci sliku lepo da popuni prostor bez spljoštavanja -->
+    <img src="{{ url_for('static', filename='images/hero.png') }}" alt="Hero slika"
+        class="absolute inset-0 w-full h-full object-cover">
 
-    <!-- Prikazujemo promenljivu iz Pythona! -->
-    <p class="text-xl text-blue-600 font-semibold">Zdravo, {{ moje_ime }}!</p>
+    <!-- 2. SLOJ: CRNI FILTER (OVERLAY) -->
+    <!-- bg-black/60 = Crna boja sa 60% providnosti (probaj bg-black/40 ako ti je pretamno) -->
+    <div class="absolute inset-0 bg-black/60"></div>
+
+    <!-- 3. SLOJ: TEKST -->
+    <!-- relative z-10 = Gura tekst NA VRH iznad slike i crnog filtera -->
+    <!-- flex ... = Centrira tekst i po horizontali i po vertikali -->
+    <div class="relative z-10 h-full flex flex-col justify-center items-center text-center p-6">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-4">Dobrodošli na TryMyBike!</h2>
+        <p class="text-xl md:text-2xl text-gray-200 mb-6">Tvoja omiljena radnja za bicikle i opremu.</p>
+
+        <!-- Prikazujemo promenljivu iz Pythona! -->
+        <p class="text-lg text-blue-300 font-semibold border border-blue-300 px-4 py-2 rounded-full backdrop-blur-sm">
+            Drago nam je da si tu, {{ moje_ime }}!
+        </p>
+    </div>
 
 </div>
+
 
 <h3 class="text-2xl font-bold mt-8 mb-4 text-left text-gray-800">Naši proizvodi:</h3>
 
