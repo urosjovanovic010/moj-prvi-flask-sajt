@@ -3,9 +3,9 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 proizvodi = [
-        {"id": 1,"naziv": "Gume za bicikl", "cena": 1500},
-        {"id": 2,"naziv": "Lanac", "cena": 2000},
-        {"id": 3,"naziv": "Svetlo za bicikl", "cena": 800}
+        {"id": 1,"naziv": "Gume za bicikl", "cena": 1500, "slika": "guma.jpg"},
+        {"id": 2,"naziv": "Lanac", "cena": 2000, "slika": "lanac.png"},
+        {"id": 3,"naziv": "Svetlo za bicikl", "cena": 800, "slika": "svetlo.png"}
     ]
 
 @app.route('/')
@@ -31,7 +31,7 @@ def detalji_proizvoda(id):
             
     # Ako proizvod sa tim ID-jem ne postoji (npr. neko ukuca /proizvod/99)
     if izabrani_proizvod == None:
-        return "Izvini, taj proizvod ne postoji!", 404
+        return render_template("404.html"), 404
         
     # Ako postoji, prosleđujemo ga u novi HTML templejt
     return render_template('proizvod.html', proizvod=izabrani_proizvod)
