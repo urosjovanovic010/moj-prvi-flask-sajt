@@ -39,12 +39,25 @@
 
     {% for proizvod in proizvodi %}
 
-    <a href="{{ url_for('detalji_proizvoda', id=proizvod.id)}} ">
-        <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition">
-            <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}" alt="{{ proizvod.naziv }}">
+    <a href="{{ url_for('detalji_proizvoda', id=proizvod.id)}} " class="block">
+
+        <!-- Dodato: h-full flex flex-col (natera karticu da popuni visinu i ređa elemente u kolonu) -->
+        <div
+            class="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition h-full flex flex-col">
+
+            <!-- Dodato: w-full h-48 object-cover za SLIKU! -->
+            <!-- h-48 je fiksna visina. object-cover iseče višak da se ne bi spljoštila slika -->
+            <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}" alt="{{ proizvod.naziv }}"
+                class="w-full h-48 object-cover rounded-md mb-4">
+
             <h4 class="text-xl font-semibold text-blue-700">{{ proizvod.naziv }}</h4>
-            <p class="text-lg text-gray-600 mt-2">Cena: <span class="font-bold text-green-600">{{ proizvod.cena }}
-                    RSD</span></p>
+
+            <!-- Dodato: mt-auto -->
+            <!-- Ovo gura cenu na SAMO DNO kartice, bez obzira na visinu slike i naslova -->
+            <p class="text-lg text-gray-600 mt-auto pt-4">Cena:
+                <span class="font-bold text-green-600">{{ proizvod.cena }} RSD</span>
+            </p>
+
         </div>
     </a>
 

@@ -1,15 +1,27 @@
 from flask import Flask, render_template, request
+import sqlite3
 
-from baza import proizvodi
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    moje_ime="Uros"
+    moje_ime = "Uros"
     
-    return render_template('pocetna.html',moje_ime=moje_ime, proizvodi=proizvodi)
+    # 1. Povezujemo se na bazu
+    konekcija = sqlite3.connect('baza.db')
+    konekcija.row_factory = sqlite3.Row # Magija: tera SQLite da nam vrati podatke kao rečnike, da ne menjamo HTML!
+    kursor = konekcija.cursor()
+    
+    # 2. Čupamo SVE proizvode (ovo ti je poznato)
+    kursor.execute('SELECT * FROM proizvodi')
+    proizvodi_iz_baze = kursor.fetchall()
+    
+    # 3. Zatvaramo vezu (važno da ne zagušimo server)
+    konekcija.close()
+    
+    return render_template('pocetna.html', moje_ime=moje_ime, proizvodi=proizvodi_iz_baze)
 
 @app.route('/o-nama')
 def onama():
@@ -17,20 +29,21 @@ def onama():
 
 @app.route('/proizvod/<int:id>')
 def detalji_proizvoda(id):
-    # Pravimo praznu promenljivu u koju ćemo smestiti nađen proizvod
-    izabrani_proizvod = None
+    konekcija = sqlite3.connect('baza.db')
+    konekcija.row_factory = sqlite3.Row
+    kursor = konekcija.cursor()
     
-    # Prolazimo kroz našu "bazu"
-    for p in proizvodi:
-        if p["id"] == id:
-            izabrani_proizvod = p  # Pronašli smo ga!
-            break  # Zaustavljamo petlju jer smo našli šta tražimo
-            
-    # Ako proizvod sa tim ID-jem ne postoji (npr. neko ukuca /proizvod/99)
-    if izabrani_proizvod == None:
+    # Čupamo SAMO JEDAN proizvod gde se ID poklapa (umesto FOR petlje!)
+    kursor.execute('SELECT * FROM proizvodi WHERE id = ?', (id,))
+    izabrani_proizvod = kursor.fetchone()
+    
+    konekcija.close()
+    
+    # Ako ga nema u bazi
+    if izabrani_proizvod is None:
         return render_template("404.html"), 404
         
-    # Ako postoji, prosleđujemo ga u novi HTML templejt
+    # Ako postoji, prosleđujemo ga u HTML
     return render_template('proizvod.html', proizvod=izabrani_proizvod)
 
 @app.route('/kontakt', methods=['GET', 'POST'])
