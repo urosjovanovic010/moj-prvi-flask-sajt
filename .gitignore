@@ -3,3 +3,4 @@ venv/
 .obsidian/
 chathistory.txt
 trymybike/
+*.db
