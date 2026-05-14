@@ -36,15 +36,15 @@ Pred nama su 4 uzbudljive faze. Svaka faza donosi novi koncept koji se koristi u
 
 ### FAZA 1: Utvrđivanje gradiva i "Čišćenje" (Trenutno)
 Cilj: Očistiti male tehničke dugove i obogatiti trenutni UI.
-- [ ] Očistiti `.gitignore` (skloniti `.obsidian` iz Git istorije da nam ne prlja kod).
-- [ ] Dodati lepši navigacioni meni u `base.html` (aktivan link, logo koji vodi na početnu).
-- [ ] Dodati još par proizvoda u `baza.py` da bi "Shop" izgledao bogatije.
+- [x] Očistiti `.gitignore` (skloniti `.obsidian` iz Git istorije da nam ne prlja kod).
+- [x] Dodati lepši navigacioni meni u `base.html` (aktivan link, logo koji vodi na početnu).
+- [x] Dodati još par proizvoda u `baza.py` da bi "Shop" izgledao bogatije.
 
 ### FAZA 2: Komunikacija sa korisnikom (HTML Forme i Metode)
 Cilj: Omogućiti posetiocima da pošalju podatke na server.
-- [ ] Napraviti `kontakt.html` stranicu sa formom (Ime, Email, Poruka).
-- [ ] Učiti razliku između **GET** i **POST** metoda u web-u.
-- [ ] Napraviti Flask rutu koja prihvata te podatke i ispisuje ih u terminal (kasnije i na ekran "Uspešno ste poslali poruku").
+- [x] Napraviti `kontakt.html` stranicu sa formom (Ime, Email, Poruka).
+- [x] Učiti razliku između **GET** i **POST** metoda u web-u.
+- [x] Napraviti Flask rutu koja prihvata te podatke i ispisuje ih u terminal (kasnije i na ekran "Uspešno ste poslali poruku").
 
 ### FAZA 3: Prelazak na Pravu Bazu Podataka (SQLite)
 Cilj: Zameniti naš `baza.py` pravom bazom podataka kako bi podaci trajno ostali sačuvani, baš kao na pravim sajtovima.

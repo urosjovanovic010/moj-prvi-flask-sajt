@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md mt-10 text-center">
+
+    <!-- Proveravamo da li nam je Python poslao signal 'uspesno_poslato' -->
+    {% if uspesno_poslato %}
+    <h2 class="text-3xl font-bold text-green-600 mb-4">Uspešno poslato!</h2>
+    <p class="text-gray-700 text-lg mb-6">Hvala ti, <strong>{{ korisnik }}</strong>. Primili smo tvoju poruku i javićemo
+        se uskoro!</p>
+    <a href="{{ url_for('home') }}"
+        class="inline-block bg-blue-600 text-white font-bold px-6 py-2 rounded hover:bg-blue-700 transition">
+        Povratak na početnu
+    </a>
+
+    <!-- Ako nije (što znači da korisnik tek otvara stranicu), prikaži formu -->
+    {% else %}
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">Kontaktirajte nas</h2>
+
+    <form method="POST" action="" class="flex flex-col gap-4 text-left">
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Tvoje ime:</label>
+            <input type="text" name="ime"
+                class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500" required>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Poruka:</label>
+            <textarea name="poruka" rows="4"
+                class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
+                required></textarea>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700 transition mt-2">
+            Pošalji poruku
+        </button>
+    </form>
+    {% endif %}
+
+</div>
+
+{% endblock %}

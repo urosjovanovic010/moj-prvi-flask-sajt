@@ -12,13 +12,32 @@
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
     <!-- HEADER (Gornja Kifla) -->
-    <header class="bg-blue-600 text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">TryMyBike</h1>
-            <nav>
-                <a href="{{ url_for('home') }}" class="hover:text-blue-200 mr-4">Početna</a>
-                <a href="{{ url_for('onama') }}" class="hover:text-blue-200">O nama</a>
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="container mx-auto flex justify-between items-center p-4">
+
+            <!-- LOGO: Sada je klikabilan i vodi na početnu! -->
+            <a href="{{ url_for('home') }}"
+                class="text-3xl font-extrabold tracking-tight hover:text-blue-200 transition">
+                TryMyBike
+            </a>
+
+            <!-- NAVIGACIJA: Linkovi sada imaju padding i menjaju pozadinu na hover -->
+            <nav class="flex gap-2">
+                <a href="{{ url_for('home') }}"
+                    class="px-4 py-2 rounded-md hover:bg-blue-700 hover:shadow-inner transition font-medium">
+                    Početna
+                </a>
+                <a href="{{ url_for('onama') }}"
+                    class="px-4 py-2 rounded-md hover:bg-blue-700 hover:shadow-inner transition font-medium">
+                    O nama
+                </a>
+                <a href="{{ url_for('kontakt') }}"
+                    class="px-4 py-2 rounded-md hover:bg-blue-700 hover:shadow-inner transition font-medium">
+                    Kontakt
+                </a>
+
             </nav>
+
         </div>
     </header>
 
