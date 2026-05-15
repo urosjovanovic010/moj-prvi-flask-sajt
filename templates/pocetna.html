@@ -41,27 +41,38 @@
 
     <a href="{{ url_for('detalji_proizvoda', id=proizvod.id)}} " class="block">
 
-        <!-- Dodato: h-full flex flex-col (natera karticu da popuni visinu i ređa elemente u kolonu) -->
+        <!-- KARTICA POČINJE OVDE (i drži sve unutar sebe) -->
         <div
-            class="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition h-full flex flex-col">
+            class="group bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition h-full flex flex-col">
 
-            <!-- Dodato: w-full h-48 object-cover za SLIKU! -->
-            <!-- h-48 je fiksna visina. object-cover iseče višak da se ne bi spljoštila slika -->
-            <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}" alt="{{ proizvod.naziv }}"
-                class="w-full h-48 object-cover rounded-md mb-4">
+            <!-- 4:3 KONTEJNER ZA SLIKU -->
+            <div class="relative aspect-[4/3] rounded-md overflow-hidden bg-white mb-4">
 
+                {% if proizvod.slika.startswith('http') %}
+                <img src="{{ proizvod.slika }}" alt="{{ proizvod.naziv }}"
+                    class="w-full h-full object-contain transform group-hover:scale-105 transition duration-500">
+                {% else %}
+                <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}" alt="{{ proizvod.naziv }}"
+                    class="w-full h-full object-contain transform group-hover:scale-105 transition duration-500">
+                {% endif %}
+
+            </div>
+
+            <!-- NASLOV (Strogo UNUTAR kartice) -->
             <h4 class="text-xl font-semibold text-blue-700">{{ proizvod.naziv }}</h4>
 
-            <!-- Dodato: mt-auto -->
-            <!-- Ovo gura cenu na SAMO DNO kartice, bez obzira na visinu slike i naslova -->
+            <!-- CENA (Strogo UNUTAR kartice) -->
             <p class="text-lg text-gray-600 mt-auto pt-4">Cena:
                 <span class="font-bold text-green-600">{{ proizvod.cena }} RSD</span>
             </p>
 
         </div>
+        <!-- KARTICA SE ZAVRŠAVA OVDE -->
+
     </a>
 
     {% endfor %}
+
 </div>
 
 {% endblock %}

@@ -15,13 +15,33 @@ def home():
     kursor = konekcija.cursor()
     
     # 2. Čupamo SVE proizvode (ovo ti je poznato)
-    kursor.execute('SELECT * FROM proizvodi')
+    kursor.execute('SELECT * FROM proizvodi WHERE kolicina > 0 LIMIT 24')
+
     proizvodi_iz_baze = kursor.fetchall()
     
     # 3. Zatvaramo vezu (važno da ne zagušimo server)
     konekcija.close()
     
     return render_template('pocetna.html', moje_ime=moje_ime, proizvodi=proizvodi_iz_baze)
+
+# Pametna ruta koja hvata tekst iz URL-a (npr. /kategorija/Oprema)
+@app.route('/kategorija/<ime_kategorije>')
+def kategorija(ime_kategorije):
+    konekcija = sqlite3.connect('baza.db')
+    konekcija.row_factory = sqlite3.Row
+    kursor = konekcija.cursor()
+    
+    # Tražimo samo proizvode koji pripadaju toj kategoriji! (limitiramo na 24 zbog brzine)
+    kursor.execute('SELECT * FROM proizvodi WHERE glavna_kategorija = ? AND kolicina > 0 LIMIT 24', (ime_kategorije,))
+
+
+    proizvodi_iz_baze = kursor.fetchall()
+    
+    konekcija.close()
+    
+    # Renderujemo pocetna.html, samo prosleđujemo filtrirane proizvode
+    return render_template('pocetna.html', proizvodi=proizvodi_iz_baze, moje_ime="Uros")
+
 
 @app.route('/o-nama')
 def onama():
