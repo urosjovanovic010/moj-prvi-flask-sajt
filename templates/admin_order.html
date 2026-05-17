@@ -23,16 +23,57 @@
                 </div>
                 
                 <div class="p-6">
-                    <ul class="space-y-4 mb-8">
-                        {% set stavke = p.proizvodi_tekst.split(' | ') %}
+                    <!-- Zaglavlje tabele -->
+                    <div class="grid grid-cols-12 gap-4 pb-3 mb-2 border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        <div class="col-span-6">Product</div>
+                        <div class="col-span-2 text-center">QTY</div>
+                        <div class="col-span-2 text-right">Unit Price</div>
+                        <div class="col-span-2 text-right">Total</div>
+                    </div>
+
+                    <!-- Stavke -->
+                    <ul class="divide-y divide-gray-50 mb-8">
                         {% for stavka in stavke %}
-                        <li class="flex items-center gap-4 p-4 border border-gray-100 rounded-lg">
-                            <div class="w-12 h-12 bg-gray-50 flex items-center justify-center rounded text-gray-400">
-                                🚲
+                        <li class="grid grid-cols-12 gap-4 py-4 items-center">
+                            
+                            <!-- Slika -->
+                            <div class="col-span-1">
+                                {% if stavka.slika and stavka.slika != 'placeholder.jpg' %}
+                                <img src="{{ stavka.slika }}"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                                     alt="{{ stavka.naziv }}"
+                                     class="w-12 h-12 object-contain rounded border border-gray-100 bg-gray-50">
+                                <div class="w-12 h-12 bg-gray-100 rounded border border-gray-100 items-center justify-center text-gray-400 text-xl hidden">🚲</div>
+                                {% else %}
+                                <div class="w-12 h-12 bg-gray-100 rounded border border-gray-100 flex items-center justify-center text-gray-400 text-xl">🚲</div>
+                                {% endif %}
                             </div>
-                            <div class="flex-grow">
-                                <p class="text-sm font-bold text-gray-800">{{ stavka }}</p>
+
+                            <!-- Naziv i SKU -->
+                            <div class="col-span-5 pl-2">
+                                <p class="text-sm font-semibold text-gray-900 leading-snug">{{ stavka.naziv }}</p>
+                                {% if stavka.sku and stavka.sku != 'N/A' %}
+                                <p class="text-xs text-gray-400 mt-0.5 font-mono">SKU: {{ stavka.sku }}</p>
+                                {% endif %}
                             </div>
+
+                            <!-- Količina -->
+                            <div class="col-span-2 text-center text-sm text-gray-600 font-medium">{{ stavka.kolicina }}</div>
+
+                            <!-- Jedinična cena -->
+                            <div class="col-span-2 text-right text-sm text-gray-600">
+                                {% if stavka.cena > 0 %}
+                                {{ "{:,.2f}".format(stavka.cena).replace(',', 'X').replace('.', ',').replace('X', '.') }} RSD
+                                {% else %}—{% endif %}
+                            </div>
+
+                            <!-- Ukupno po stavci -->
+                            <div class="col-span-2 text-right text-sm font-bold text-[#EA580C]">
+                                {% if stavka.ukupno > 0 %}
+                                {{ "{:,.2f}".format(stavka.ukupno).replace(',', 'X').replace('.', ',').replace('X', '.') }} RSD
+                                {% else %}—{% endif %}
+                            </div>
+
                         </li>
                         {% endfor %}
                     </ul>
