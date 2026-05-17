@@ -1,35 +1,92 @@
 {% extends "base.html" %}
 
+<!-- Google će sada videti npr: "Shimano Menjač - TryMyBike" -->
+{% block naslov_stranice %}{{ proizvod.naziv }} - TryMyBike{% endblock %}
+<!-- Google će sada videti tačnu cenu i naziv u opisu -->
+{% block seo_opis %}Kupi {{ proizvod.naziv }} po odličnoj ceni od {{ proizvod.cena }} RSD. Istraži našu ponudu biciklističke opreme!{% endblock %}
+
 {% block content %}
-<div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-10">
+<div class="container mx-auto px-4 py-8">
 
-    <!-- Prikazujemo naziv proizvoda -->
-    <h2 class="text-4xl font-extrabold text-gray-800 mb-4">{{ proizvod.naziv }}</h2>
-    <!-- Proveravamo da li naziv slike počinje sa 'http' (da li je link sa interneta) -->
-    {% if proizvod.slika.startswith('http') %}
-    <img src="{{ proizvod.slika }}" alt="{{ proizvod.naziv }}" class="w-full h-48 object-cover rounded-md mb-4">
+    <!-- BREADCRUMBS (Putanja) -->
+    <nav class="text-sm text-gray-500 mb-8">
+        <a href="/" class="hover:text-orange-500 transition">Početna</a>
+        {% if proizvod.odeljak %} <span class="mx-2">/</span> <a href="{{ url_for('kategorija', ime_kategorije=proizvod.glavna_kategorija, odeljak=proizvod.odeljak) }}" class="hover:text-orange-500 transition">{{ proizvod.odeljak }}</a> {% endif %}
+        {% if proizvod.kategorija %} <span class="mx-2">/</span> <a href="{{ url_for('kategorija', ime_kategorije=proizvod.glavna_kategorija, odeljak=proizvod.odeljak, kategorija=proizvod.kategorija) }}" class="hover:text-orange-500 transition">{{ proizvod.kategorija }}</a> {% endif %}
+    </nav>
 
-    <!-- Ako nije link, onda je naša lokalna slika (npr. placeholder.jpg) -->
-    {% else %}
-    <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}" alt="{{ proizvod.naziv }}"
-        class="w-full h-48 object-cover rounded-md mb-4">
-    {% endif %}
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="flex flex-col md:flex-row">
+            
+            <!-- LEVA STRANA: Slika -->
+            <div class="md:w-1/2 p-8 md:border-r border-gray-100 bg-white grid place-items-center relative">
+                <!-- Značka za zalihe -->
+                {% if proizvod.kolicina > 0 %}
+                <span class="absolute top-4 left-4 bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">NA STANJU</span>
+                {% else %}
+                <span class="absolute top-4 left-4 bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide">NEMA NA STANJU</span>
+                {% endif %}
 
-    <div class="border-t border-b border-gray-200 py-6 my-6">
-        <p class="text-gray-600 text-lg mb-2">Detalji o ovom vrhunskom delu za bicikl.</p>
+                {% if proizvod.slika.startswith('http') %}
+                <img src="{{ proizvod.slika }}" alt="{{ proizvod.naziv }}" class="max-w-full h-auto max-h-[500px] object-contain hover:scale-105 transition duration-500">
+                {% else %}
+                <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}" alt="{{ proizvod.naziv }}" class="max-w-full h-auto max-h-[500px] object-contain hover:scale-105 transition duration-500">
+                {% endif %}
+            </div>
 
-        <!-- Prikazujemo ID i Cenu -->
-        <p class="text-gray-500">Šifra proizvoda (ID): <span class="font-mono text-gray-800">{{ proizvod.id }}</span>
-        </p>
-        <p class="text-2xl font-bold text-green-600 mt-4">Cena: {{ proizvod.cena }} RSD</p>
+            <!-- DESNA STRANA: Informacije i Kupovina -->
+            <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-gray-50/50">
+                
+                {% if proizvod.proizvodjac %}
+                <p class="text-sm text-gray-500 uppercase tracking-widest font-bold mb-2">{{ proizvod.proizvodjac }}</p>
+                {% endif %}
+
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">{{ proizvod.naziv }}</h1>
+                
+                <p class="text-sm text-gray-500 mb-6">Šifra (SKU): <span class="font-mono text-gray-800">{{ proizvod.sku }}</span></p>
+
+                <!-- Cena -->
+                <div class="mb-8 p-6 bg-white border border-gray-100 rounded-xl shadow-sm">
+                    <p class="text-sm text-gray-500 mb-1">Cena sa PDV-om</p>
+                    <p class="text-4xl font-extrabold text-orange-500">{{ proizvod.cena }} <span class="text-lg text-gray-400 font-normal">RSD</span></p>
+                </div>
+
+                <!-- Dugme za korpu -->
+                {% if proizvod.kolicina > 0 %}
+                <a href="{{ url_for('dodaj_u_korpu', id=proizvod.id) }}" class="block w-full bg-orange-500 hover:bg-orange-600 text-white text-center font-extrabold text-lg py-5 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 mb-4 flex items-center justify-center gap-3 group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    DODAJ U KORPU
+                </a>
+                <p class="text-center text-sm text-green-600 font-medium">✓ Bezbedna kupovina i brza isporuka</p>
+                {% else %}
+                <button disabled class="block w-full bg-gray-300 text-gray-500 text-center font-extrabold text-lg py-5 rounded-xl cursor-not-allowed mb-4">
+                    TRENUTNO NEDOSTUPNO
+                </button>
+                <p class="text-center text-sm text-red-500 font-medium">Proverite dostupnost kasnije.</p>
+                {% endif %}
+
+            </div>
+        </div>
+        
+        <!-- DONJI DEO: Mesto za opis -->
+        <div class="border-t border-gray-100 p-8 md:p-12 bg-white">
+            <h3 class="text-2xl font-bold text-gray-900 mb-6">Opis i specifikacije</h3>
+            <div class="prose max-w-none text-gray-600 leading-relaxed">
+                <p><strong>{{ proizvod.naziv }}</strong> predstavlja vrhunski izbor za vaš bicikl. </p>
+                <p class="mt-4">Ovo je prostor predviđen za detaljan opis proizvoda koji ćemo u budućnosti povlačiti iz baze podataka. Trenutno naša baza nema kolonu "opis", pa se ovaj tekst automatski generiše kao rezervno mesto (placeholder). U sledećim fazama možemo dodati funkcionalnost za pisanje opisa u Admin panelu i čuvanje u bazi!</p>
+                
+                <!-- Tabela specifikacija kao primer -->
+                <table class="w-full mt-8 border-collapse">
+                    <tbody>
+                        <tr class="border-b border-gray-100"><td class="py-3 font-semibold text-gray-800 w-1/3">Proizvođač</td><td class="py-3">{{ proizvod.proizvodjac }}</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-3 font-semibold text-gray-800">Kategorija</td><td class="py-3">{{ proizvod.kategorija }}</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-3 font-semibold text-gray-800">SKU</td><td class="py-3 font-mono">{{ proizvod.sku }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-
-    <!-- Dugme za povratak nazad -->
-    <a href="{{ url_for('home') }}"
-        class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-        &larr; Nazad na sve proizvode
-    </a>
-
-
 </div>
 {% endblock %}

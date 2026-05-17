@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block naslov_stranice %}Završetak kupovine - TryMyBike{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-10 max-w-6xl">
+    <h1 class="text-[32px] font-extrabold text-[#111827] mb-8 tracking-tight">Završetak kupovine</h1>
+
+    <div class="flex flex-col lg:flex-row gap-8 items-start">
+        
+        <!-- LEVI DEO: Forma -->
+        <div class="lg:w-2/3 bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-4">Podaci za dostavu</h2>
+            
+            <form action="{{ url_for('placanje') }}" method="POST" class="space-y-6">
+                
+                <div class="grid grid-cols-12 gap-x-6 gap-y-6">
+                    
+                    <!-- Red 1 -->
+                    <div class="col-span-12">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1.5">Ime i Prezime *</label>
+                        <input type="text" name="ime_prezime" required class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#EA580C] focus:ring-1 focus:ring-[#EA580C] transition text-sm">
+                    </div>
+
+                    <!-- Red 2 -->
+                    <div class="col-span-12 md:col-span-5">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1.5">Adresa *</label>
+                        <input type="text" name="adresa" required placeholder="Ulica i broj" class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#EA580C] focus:ring-1 focus:ring-[#EA580C] transition text-sm">
+                    </div>
+                    <div class="col-span-12 md:col-span-4">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1.5">Grad / Opština *</label>
+                        <input type="text" name="grad" required class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#EA580C] focus:ring-1 focus:ring-[#EA580C] transition text-sm">
+                    </div>
+                    <div class="col-span-12 md:col-span-3">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1.5">Poštanski broj *</label>
+                        <input type="text" name="postanski_broj" required class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#EA580C] focus:ring-1 focus:ring-[#EA580C] transition text-sm">
+                    </div>
+
+                    <!-- Red 3 -->
+                    <div class="col-span-12 md:col-span-3">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1.5">Telefon *</label>
+                        <input type="tel" name="telefon" required class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#EA580C] focus:ring-1 focus:ring-[#EA580C] transition text-sm">
+                    </div>
+                    <div class="col-span-12 md:col-span-4">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1.5">Email *</label>
+                        <input type="email" name="email" required placeholder="Na ovaj mail stiže..." class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#EA580C] focus:ring-1 focus:ring-[#EA580C] transition text-sm">
+                    </div>
+                    <div class="col-span-12 md:col-span-5">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1.5">Napomena (opciono)</label>
+                        <textarea name="napomena" rows="2" placeholder="Ukoliko imate posebne zahteve za kurira..." class="w-full border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#EA580C] focus:ring-1 focus:ring-[#EA580C] transition text-sm resize-none"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="pt-6">
+                    <button type="submit" class="w-full bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold text-[15px] py-4 rounded-xl shadow-md transition transform hover:-translate-y-0.5">
+                        POTVRDI NARUDŽBINU
+                    </button>
+                    <p class="text-xs text-center text-gray-500 mt-4">Plaćanje se vrši pouzećem prilikom preuzimanja paketa.</p>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- DESNI DEO: Iznos -->
+        <div class="lg:w-1/3 bg-[#FCFCFC] rounded-2xl p-8 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 lg:sticky lg:top-24">
+            <h3 class="text-lg font-bold text-gray-900 mb-6 border-b pb-4">Vaša narudžbina</h3>
+            
+            <div class="flex justify-between text-sm text-gray-600 mb-4">
+                <span>Proizvodi:</span>
+                <span>{{ "{:,.2f}".format(ukupna_cena).replace(',', 'X').replace('.', ',').replace('X', '.') }} RSD</span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-600 mb-6 pb-6 border-b border-gray-200">
+                <span>Dostava:</span>
+                {% if dostava == 0 %}
+                <span class="text-[#059669] font-bold">Besplatna</span>
+                {% else %}
+                <span class="font-bold">{{ dostava }} RSD</span>
+                {% endif %}
+            </div>
+            
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-lg font-bold text-gray-900">Ukupno za plaćanje:</span>
+                <span class="text-2xl font-extrabold text-[#EA580C]">{{ "{:,.2f}".format(ukupna_cena + dostava).replace(',', 'X').replace('.', ',').replace('X', '.') }} RSD</span>
+            </div>
+            
+            <div class="flex items-start gap-3 text-sm text-gray-500 bg-white p-4 rounded-lg border border-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#059669] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p>Ovo je edukativni projekat. Vaši podaci nigde ne idu i narudžbina se upisuje isključivo u lokalnu SQLite bazu.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

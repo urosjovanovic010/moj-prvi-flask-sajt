@@ -2,77 +2,180 @@
 
 {% block content %}
 
-<!-- GLAVNI KONTEJNER (Sendvič) -->
-<!-- relative = omogućava slojevima unutra da se ređaju jedan preko drugog -->
-<!-- h-96 = fiksna visina za hero sekciju, overflow-hidden = seče sliku ako je prevelika -->
-<div class="relative h-96 rounded-lg overflow-hidden shadow-lg mb-8">
+<!-- Ako NEMA filtera (Znači da smo na glavnoj POČETNOJ stranici) -->
+{% if not odeljci %}
+
+<!-- HERO SLIKA: Full width -->
+<div class="relative w-full h-[30vh] min-h-[250px] max-h-[450px] overflow-hidden group">
 
     <!-- 1. SLOJ: SLIKA -->
-    <!-- absolute inset-0 = rastegni se preko celog kontejnera -->
-    <!-- object-cover = iseci sliku lepo da popuni prostor bez spljoštavanja -->
     <img src="{{ url_for('static', filename='images/hero.png') }}" alt="Hero slika"
         class="absolute inset-0 w-full h-full object-cover">
 
     <!-- 2. SLOJ: CRNI FILTER (OVERLAY) -->
-    <!-- bg-black/60 = Crna boja sa 60% providnosti (probaj bg-black/40 ako ti je pretamno) -->
     <div class="absolute inset-0 bg-black/60"></div>
 
     <!-- 3. SLOJ: TEKST -->
-    <!-- relative z-10 = Gura tekst NA VRH iznad slike i crnog filtera -->
-    <!-- flex ... = Centrira tekst i po horizontali i po vertikali -->
     <div class="relative z-10 h-full flex flex-col justify-center items-center text-center p-6">
-        <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-4">Dobrodošli na TryMyBike!</h2>
-        <p class="text-xl md:text-2xl text-gray-200 mb-6">Tvoja omiljena radnja za bicikle i opremu.</p>
-
-        <!-- Prikazujemo promenljivu iz Pythona! -->
-        <p class="text-lg text-blue-300 font-semibold border border-blue-300 px-4 py-2 rounded-full backdrop-blur-sm">
-            Drago nam je da si tu, {{ moje_ime }}!
-        </p>
+        <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-4 uppercase tracking-widest">TryMyBike</h2>
+        <p class="text-xl md:text-3xl text-gray-200 mb-8 font-light">Tvoja avantura počinje ovde.</p>
+        <a href="{{ url_for('kategorija', ime_kategorije='Delovi') }}"
+            class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg transition shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            Istraži Ponudu
+        </a>
     </div>
-
 </div>
 
+<!-- IZDVAJAMO IZ PONUDE (6 KOMADA) -->
+<div class="container mx-auto px-4 mt-16 mb-16">
+    <h3 class="text-3xl font-extrabold mb-8 text-center text-gray-900 uppercase tracking-wide">Izdvajamo iz ponude</h3>
 
-<h3 class="text-2xl font-bold mt-8 mb-4 text-left text-gray-800">Naši proizvodi:</h3>
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-    {% for proizvod in proizvodi %}
-
-    <a href="{{ url_for('detalji_proizvoda', id=proizvod.id)}} " class="block">
-
-        <!-- KARTICA POČINJE OVDE (i drži sve unutar sebe) -->
-        <div
-            class="group bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md transition h-full flex flex-col">
-
-            <!-- 4:3 KONTEJNER ZA SLIKU -->
-            <div class="relative aspect-[4/3] rounded-md overflow-hidden bg-white mb-4">
-
-                {% if proizvod.slika.startswith('http') %}
-                <img src="{{ proizvod.slika }}" alt="{{ proizvod.naziv }}"
-                    class="w-full h-full object-contain transform group-hover:scale-105 transition duration-500">
-                {% else %}
-                <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}" alt="{{ proizvod.naziv }}"
-                    class="w-full h-full object-contain transform group-hover:scale-105 transition duration-500">
-                {% endif %}
-
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        {% for proizvod in proizvodi %}
+        <a href="{{ url_for('detalji_proizvoda', id=proizvod.id, sku=proizvod.sku, slug=proizvod.naziv|slugify) }}"
+            class="block h-full">
+            <div
+                class="group bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                <div class="relative aspect-[4/3] rounded-md overflow-hidden bg-white mb-4">
+                    {% if proizvod.slika.startswith('http') %}
+                    <img src="{{ proizvod.slika }}" alt="{{ proizvod.naziv }}"
+                        class="w-full h-full object-contain transform group-hover:scale-105 transition duration-500">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}" alt="{{ proizvod.naziv }}"
+                        class="w-full h-full object-contain transform group-hover:scale-105 transition duration-500">
+                    {% endif %}
+                </div>
+                <!-- line-clamp-2 služi da dugački naslovi ne "razvale" karticu, već ih skrati na 2 reda -->
+                <h4 class="text-sm font-semibold text-gray-800 hover:text-orange-500 transition line-clamp-2">{{
+                    proizvod.naziv }}</h4>
+                <p class="text-lg mt-auto pt-4 font-bold text-orange-500">{{ proizvod.cena }} <span
+                        class="text-sm">RSD</span></p>
             </div>
-
-            <!-- NASLOV (Strogo UNUTAR kartice) -->
-            <h4 class="text-xl font-semibold text-blue-700">{{ proizvod.naziv }}</h4>
-
-            <!-- CENA (Strogo UNUTAR kartice) -->
-            <p class="text-lg text-gray-600 mt-auto pt-4">Cena:
-                <span class="font-bold text-green-600">{{ proizvod.cena }} RSD</span>
-            </p>
-
-        </div>
-        <!-- KARTICA SE ZAVRŠAVA OVDE -->
-
-    </a>
-
-    {% endfor %}
-
+        </a>
+        {% endfor %}
+    </div>
 </div>
+
+{% else %}
+<!-- ============================================== -->
+<!-- OVO SE PRIKAZUJE KADA UĐEMO U NEKU KATEGORIJU -->
+<!-- ============================================== -->
+
+<div class="container mx-auto px-4 mt-8 mb-16">
+    <div class="flex flex-col md:flex-row gap-8">
+
+        <!-- LEVA STRANA: Sidebar -->
+        <aside class="w-full md:w-1/4 bg-white p-6 rounded-lg shadow-sm h-fit">
+            <h3 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4">Filteri</h3>
+            <h4 class="font-semibold text-gray-600 mb-2 uppercase text-xs tracking-wider">Odeljci</h4>
+            <ul class="space-y-2">
+                {% for o in odeljci %}
+                <li>
+                    <a href="{{ url_for('kategorija', ime_kategorije=trenutna_kategorija, odeljak=o.odeljak) }}"
+                        class="text-gray-600 hover:text-orange-500 transition {% if o.odeljak == izabrani_odeljak %} font-bold text-orange-500 {% endif %}">
+                        {{ o.odeljak }}
+                    </a>
+
+                    {% if o.odeljak == izabrani_odeljak %}
+                    <ul class="ml-4 mt-2 border-l-2 border-orange-200 pl-4 space-y-2">
+                        {% for k in kategorije %}
+                        <li>
+                            <a href="{{ url_for('kategorija', ime_kategorije=trenutna_kategorija, odeljak=o.odeljak, kategorija=k.kategorija) }}"
+                                class="text-sm text-gray-500 hover:text-orange-500 transition {% if k.kategorija == izabrana_kategorija %} font-bold text-orange-500 {% endif %}">
+                                {{ k.kategorija }}
+                            </a>
+
+                            {% if k.kategorija == izabrana_kategorija %}
+                            <ul class="ml-4 mt-2 border-l border-gray-200 pl-4 space-y-1">
+                                {% for pk in potkategorije %}
+                                <li>
+                                    <a href="{{ url_for('kategorija', ime_kategorije=trenutna_kategorija, odeljak=o.odeljak, kategorija=k.kategorija, potkategorija=pk.potkategorija) }}"
+                                        class="text-xs text-gray-400 hover:text-gray-800 transition {% if pk.potkategorija == izabrana_potkategorija %} font-bold text-gray-800 {% endif %}">
+                                        {{ pk.potkategorija }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+        <!-- DESNA STRANA: Prikaz proizvoda -->
+        <main class="w-full md:w-3/4">
+            <h3 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">{{ trenutna_kategorija }} <span
+                    class="text-gray-400 text-lg font-normal">({{ proizvodi|length }} artikala)</span></h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for proizvod in proizvodi %}
+                <a href="{{ url_for('detalji_proizvoda', id=proizvod.id, sku=proizvod.sku, slug=proizvod.naziv|slugify) }}"
+                    class="block h-full">
+                    <div
+                        class="group bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                        <div class="relative aspect-[4/3] rounded-md overflow-hidden bg-white mb-4">
+                            {% if proizvod.slika.startswith('http') %}
+                            <img src="{{ proizvod.slika }}" alt="{{ proizvod.naziv }}"
+                                class="w-full h-full object-contain transform group-hover:scale-105 transition duration-500">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='images/' + proizvod.slika) }}"
+                                alt="{{ proizvod.naziv }}"
+                                class="w-full h-full object-contain transform group-hover:scale-105 transition duration-500">
+                            {% endif %}
+                        </div>
+                        <h4 class="text-sm font-semibold text-gray-800 hover:text-orange-500 transition line-clamp-2">{{
+                            proizvod.naziv }}</h4>
+                        <p class="text-xl mt-auto pt-4 font-bold text-orange-500">{{ proizvod.cena }} <span
+                                class="text-sm">RSD</span></p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            
+            <!-- PAGINACIJA -->
+            {% if ukupno_strana and ukupno_strana > 1 %}
+            <div class="flex justify-center mt-12 mb-8">
+                <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    
+                    <!-- Prethodna -->
+                    {% if trenutna_strana > 1 %}
+                    <a href="?{% if trazena_rec %}q={{ trazena_rec }}&{% endif %}strana={{ trenutna_strana - 1 }}" class="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-orange-500 transition">
+                        Prethodna
+                    </a>
+                    {% endif %}
+
+                    <!-- Brojevi stranica -->
+                    {% for i in range(1, ukupno_strana + 1) %}
+                        {% if i == trenutna_strana %}
+                        <span class="relative inline-flex items-center px-4 py-2 border border-orange-500 bg-orange-50 text-sm font-bold text-orange-600 z-10">
+                            {{ i }}
+                        </span>
+                        {% else %}
+                        <a href="?{% if trazena_rec %}q={{ trazena_rec }}&{% endif %}strana={{ i }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-orange-500 transition">
+                            {{ i }}
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+
+                    <!-- Sledeća -->
+                    {% if trenutna_strana < ukupno_strana %}
+                    <a href="?{% if trazena_rec %}q={{ trazena_rec }}&{% endif %}strana={{ trenutna_strana + 1 }}" class="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-orange-500 transition">
+                        Sledeća
+                    </a>
+                    {% endif %}
+
+                </nav>
+            </div>
+            {% endif %}
+
+        </main>
+
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}

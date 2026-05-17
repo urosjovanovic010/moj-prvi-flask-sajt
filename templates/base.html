@@ -4,49 +4,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TryMyBike - Flask Verzija</title>
-    <!-- Ubacujemo Tailwind CSS (umesto našeg običnog style.css) -->
+
+    <!-- Dinamički SEO Blokovi -->
+    <title>{% block naslov_stranice %}TryMyBike | Najbolja oprema za bicikle{% endblock %}</title>
+
+    <meta name="description"
+        content="{% block seo_opis %}Prodavnica kvalitetnih delova i opreme za bicikle. Shimano, Lazer, Cateye po odličnim cenama.{% endblock %}">
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
     <!-- HEADER (Gornja Kifla) -->
-    <header class="bg-blue-600 text-white shadow-md">
-        <div class="container mx-auto flex justify-between items-center p-4">
+    <!-- ========================================== -->
 
-            <!-- LOGO: Sada je klikabilan i vodi na početnu! -->
-            <a href="{{ url_for('home') }}"
-                class="text-3xl font-extrabold tracking-tight hover:text-blue-200 transition">
-                TryMyBike
+    <!-- ========================================== -->
+    <!-- 2. MAIN HEADER (Logo, Pretraga, Korpa) -->
+    <!-- ========================================== -->
+    <header class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-6">
+
+            <!-- LOGO -->
+            <a href="{{ url_for('home') }}" class="text-3xl font-extrabold text-gray-900 tracking-tight flex-shrink-0">
+                TryMy<span class="text-orange-500">Bike</span>
             </a>
 
-            <!-- NAVIGACIJA: Linkovi sada imaju padding i menjaju pozadinu na hover -->
-            <nav class="flex gap-2">
-                <a href="{{ url_for('home') }}"
-                    class="px-4 py-2 rounded-md hover:bg-blue-700 hover:shadow-inner transition font-medium">
-                    Početna
-                </a>
-                <a href="{{ url_for('onama') }}"
-                    class="px-4 py-2 rounded-md hover:bg-blue-700 hover:shadow-inner transition font-medium">
-                    O nama
-                </a>
-                <a href="{{ url_for('kontakt') }}"
-                    class="px-4 py-2 rounded-md hover:bg-blue-700 hover:shadow-inner transition font-medium">
-                    Kontakt
-                </a>
-                <a href="{{ url_for('kategorija', ime_kategorije='Delovi') }}"
-                    class="px-4 py-2 rounded-md hover:bg-blue-700 hover:shadow-inner transition font-medium">Delovi</a>
-                <a href="{{ url_for('kategorija', ime_kategorije='Oprema') }}"
-                    class="px-4 py-2 rounded-md hover:bg-blue-700 hover:shadow-inner transition font-medium">Oprema</a>
+            <!-- PRETRAGA -->
+            <div class="flex-grow max-w-2xl w-full">
+                <!-- PRETVORENO U FORMU! -->
+                <form action="/pretraga" method="GET"
+                    class="relative flex items-center w-full h-12 rounded-lg border border-gray-300 focus-within:shadow-md focus-within:border-orange-500 bg-white overflow-hidden transition">
 
-            </nav>
+                    <!-- Dugme za pretragu (Lupa) -->
+                    <button type="submit"
+                        class="grid place-items-center h-full w-12 text-gray-400 hover:text-orange-500 hover:bg-gray-50 transition cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+
+                    <!-- Polje za unos (dodat name="q") -->
+                    <input name="q" class="peer h-full w-full outline-none text-sm text-gray-700 bg-white pr-2"
+                        type="text" placeholder="Pronađi delove, opremu, brendove..." />
+                </form>
+            </div>
+
+
+            <!-- KORPA I IKONICE -->
+            <div class="flex items-center gap-6 text-gray-800 flex-shrink-0">
+                <a href="{{ url_for('korpa') }}" class="flex items-center gap-2 hover:text-orange-500 transition group">
+                    <div class="relative">
+                        <!-- Ikonica Korpe -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <!-- Značka sa brojem -->
+                        <span
+                            class="absolute -top-1 -right-2 bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full group-hover:scale-110 transition">
+                            {{ broj_artikala_u_korpi }}
+                        </span>
+
+                    </div>
+                    <span class="text-sm font-bold hidden md:block">Korpa</span>
+                </a>
+            </div>
 
         </div>
     </header>
 
+    <!-- ========================================== -->
+    <!-- 3. MENI ZA KATEGORIJE (Donja traka) -->
+    <!-- ========================================== -->
+    <nav class="bg-gray-800 text-white shadow-md">
+        <div class="container mx-auto px-4">
+            <ul class="flex overflow-x-auto gap-8 text-sm font-bold tracking-wide uppercase">
+                <li><a href="{{ url_for('home') }}"
+                        class="block py-4 hover:text-orange-400 transition border-b-2 border-transparent hover:border-orange-400">Početna</a>
+                </li>
+                <li><a href="{{ url_for('kategorija', ime_kategorije='Delovi') }}"
+                        class="block py-4 hover:text-orange-400 transition border-b-2 border-transparent hover:border-orange-400">Delovi</a>
+                </li>
+                <li><a href="{{ url_for('kategorija', ime_kategorije='Oprema') }}"
+                        class="block py-4 hover:text-orange-400 transition border-b-2 border-transparent hover:border-orange-400">Oprema</a>
+                </li>
+                <li><a href="{{ url_for('o_nama') }}"
+                        class="block py-4 hover:text-orange-400 transition border-b-2 border-transparent hover:border-orange-400">O
+                        nama</a></li>
+                <li><a href="{{ url_for('kontakt') }}"
+                        class="block py-4 hover:text-orange-400 transition border-b-2 border-transparent hover:border-orange-400">Kontakt</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
     <!-- SREDINA (Mesto za punjenje) -->
-    <main class="container mx-auto flex-grow p-4 mt-4">
+    <main class="w-full flex-grow pb-12">
 
         {% block content %}
         <!-- Ovde će se automatski ubacivati sadržaj drugih stranica -->
@@ -54,9 +113,68 @@
 
     </main>
 
-    <!-- FOOTER (Donja Kifla) -->
-    <footer class="bg-gray-800 text-white text-center p-4 mt-auto">
-        <p>&copy; 2026 TryMyBike. Sva prava zadržana.</p>
+    <!-- ========================================== -->
+    <!-- FOOTER -->
+    <!-- ========================================== -->
+    <footer class="bg-gray-900 text-gray-300 mt-auto border-t-4 border-orange-500">
+        <!-- Glavni deo sa kolonama -->
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <!-- Kolona 1: O nama -->
+                <div>
+                    <h3 class="text-2xl font-extrabold text-white mb-4 tracking-tight">TryMy<span
+                            class="text-orange-500">Bike</span></h3>
+                    <p class="text-sm leading-relaxed text-gray-400">
+                        Vaša premium destinacija za bicikle, iznajmljivanje i stručni servis u Pirotu, Srbija.
+                    </p>
+                </div>
+
+                <!-- Kolona 2: Linkovi -->
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-4 uppercase tracking-wider text-sm">Prodavnica</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="{{ url_for('kategorija', ime_kategorije='Oprema') }}"
+                                class="hover:text-orange-500 transition">Oprema</a></li>
+                        <li><a href="{{ url_for('kategorija', ime_kategorije='Delovi') }}"
+                                class="hover:text-orange-500 transition">Delovi</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kolona 3: Kontakt -->
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-4 uppercase tracking-wider text-sm">Kontakt</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-start gap-2">
+                            <span>📍</span>
+                            <span>7. Juli 16, Pirot 18300<br>Nikola Pašića 115, Pirot 18300</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span>✉️</span> <a href="mailto:unjovanovic@gmail.com"
+                                class="hover:text-orange-500 transition">unjovanovic@gmail.com</a>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span>📞</span> <a href="tel:0677086701"
+                                class="hover:text-orange-500 transition">0677086701</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Donji deo sa pravnim tekstom -->
+        <div class="bg-gray-950 py-6">
+            <div class="container mx-auto px-4 text-xs text-gray-500 text-center space-y-2">
+                <p>Cene na sajtu su iskazane u dinarima sa uračunatim porezom, a plaćanje se vrši isključivo u dinarima.
+                </p>
+                <p>Nastojimo da budemo što precizniji u opisu proizvoda, prikazu slika i samih cena, ali ne možemo
+                    garantovati da su sve informacije kompletne i bez grešaka.</p>
+                <p>Svi artikli prikazani na sajtu su deo naše ponude i ne podrazumeva da su dostupni u svakom trenutku.
+                    Raspoloživost robe možete proveriti pozivanjem 0677086701</p>
+                <p class="mt-4 pt-4 border-t border-gray-800">&copy; 2026 MyBike. Sva prava zadržana.</p>
+            </div>
+        </div>
     </footer>
 
 </body>

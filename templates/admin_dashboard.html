@@ -1,0 +1,66 @@
+{% extends "admin_base.html" %}
+{% block naslov_stranice %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        
+        <!-- Zaglavlje Kartice -->
+        <div class="px-6 py-5 border-b border-gray-100 bg-white">
+            <h2 class="text-lg font-bold text-gray-900">Recent Orders</h2>
+        </div>
+
+        <!-- Tabela -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 text-[10px] font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <th class="px-6 py-4">ID</th>
+                        <th class="px-6 py-4">Customer</th>
+                        <th class="px-6 py-4">Email</th>
+                        <th class="px-6 py-4">Total</th>
+                        <th class="px-6 py-4">Date</th>
+                        <th class="px-6 py-4 text-center">Status</th>
+                        <th class="px-6 py-4 text-right"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-[13px] text-gray-700">
+                    
+                    {% for porudzbina in porudzbine %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-500"># {{ porudzbina.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap font-bold text-gray-900">{{ porudzbina.ime_prezime }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-500">{{ porudzbina.email }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-500">{{ "{:,.2f}".format(porudzbina.ukupna_cena + porudzbina.dostava).replace(',', 'X').replace('.', ',').replace('X', '.') }} RSD</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-500">{{ porudzbina.datum }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                            {% if porudzbina.status == 'Finished' %}
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">Finished</span>
+                            {% elif porudzbina.status == 'Cancelled' %}
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600">Cancelled</span>
+                            {% elif porudzbina.status == 'Na čekanju' or porudzbina.status == 'Pending' %}
+                                <span class="px-3 py-1 rounded-full text-xs font-bold text-green-700">Pending</span>
+                            {% else %}
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700">{{ porudzbina.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-xs">
+                            <a href="{{ url_for('admin_order', id=porudzbina.id) }}" class="text-gray-500 hover:text-gray-900 font-medium">View</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                            Trenutno nema porudžbina.
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

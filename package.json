@@ -1,0 +1,23 @@
+{
+  "name": "flask",
+  "version": "1.0.0",
+  "description": "Ovaj fajl služi kao podsetnik za komande koje je potrebno pokrenuti svaki put kada počinješ rad na projektu.",
+  "homepage": "https://github.com/urosjovanovic010/moj-prvi-flask-sajt#readme",
+  "bugs": {
+    "url": "https://github.com/urosjovanovic010/moj-prvi-flask-sajt/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urosjovanovic010/moj-prvi-flask-sajt.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.3.0"
+  }
+}

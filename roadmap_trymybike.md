@@ -46,11 +46,19 @@ Cilj: Omogućiti posetiocima da pošalju podatke na server.
 - [x] Učiti razliku između **GET** i **POST** metoda u web-u.
 - [x] Napraviti Flask rutu koja prihvata te podatke i ispisuje ih u terminal (kasnije i na ekran "Uspešno ste poslali poruku").
 
-### FAZA 3: Prelazak na Pravu Bazu Podataka (SQLite)
+### FAZA 3: Prelazak na Pravu Bazu Podataka (SQLite) (Završeno!)
 Cilj: Zameniti naš `baza.py` pravom bazom podataka kako bi podaci trajno ostali sačuvani, baš kao na pravim sajtovima.
-- [ ] Uvod u relacione baze podataka (Tabele, Kolone, Redovi).
-- [ ] Povezivanje Flaska sa SQLite bazom podataka.
-- [ ] Čitanje proizvoda iz prave baze umesto iz Python liste.
+- [x] Uvod u relacione baze podataka (Tabele, Kolone, Redovi).
+- [x] Povezivanje Flaska sa SQLite bazom podataka.
+- [x] Čitanje proizvoda iz prave baze umesto iz Python liste.
+- [x] *Bonus:* Automatski uvoz 4000+ artikala iz CSV i XML fajlova (Dropshipping integracija)!
+- [x] *Bonus:* Napredna taksonomija (Odeljak, Kategorija, Potkategorija, SKU, Zalihe).
+
+### FAZA 3.5: Napredno filtriranje i pretraga (Sledeći logičan korak)
+Cilj: Iskoristiti novu arhitekturu baze da posetiocima sajta omogućimo lako pronalaženje delova.
+- [ ] Pravljenje "Sidebar-a" na početnoj stranici za filtere.
+- [ ] Izlistavanje svih proizvođača i kategorija iz baze.
+- [ ] Dinamičko filtriranje proizvoda klikom na checkbox ili link.
 
 ### FAZA 4: Admin Panel (Kruna projekta)
 Cilj: Napraviti zaštićen deo sajta gde vlasnik može da dodaje nove proizvode.
